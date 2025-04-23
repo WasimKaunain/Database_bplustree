@@ -1,0 +1,96 @@
+<!-- templates/range_query.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Range Query - {{ table_name.capitalize() }}</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background-color: #e0f2fe;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #1e3a8a;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      border: 1px solid #93c5fd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    .back-button {
+      background-color: #ef4444;
+      margin-top: 20px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 6px;
+      color: white;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Range Query for {{ table_name.capitalize() }} Records</h2>
+    <form method="POST" action="{{ url_for('range_query') }}">
+      <label for="min_value">Minimum Value</label>
+      <input type="number" id="min_value" name="min_value" required>
+
+      <label for="max_value">Maximum Value</label>
+      <input type="number" id="max_value" name="max_value" required>
+
+      <button type="submit">Submit</button>
+    </form>
+    <a href="{{ url_for('table_dashboard') }}" class="back-button">← Back</a>
+  </div>
+</body>
+</html>

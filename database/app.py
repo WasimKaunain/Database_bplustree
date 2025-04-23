@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import os,secrets
 from db_manager import Database
-from Tests.performance_test import *
+from performance_test import *
 
 app = Flask(__name__)
 
@@ -66,7 +66,7 @@ def dashboard():
     # if loaded_db is None:
     #     flash("No database loaded.", 'error')
     #     return redirect(url_for('home'))
-    name = session['selected_db_name']
+    name = session.get('selected_db_name')
     if name:
         db_path = os.path.join(DATABASE_FOLDER, name)
         loaded_db = Database.load_database(db_path)
@@ -83,38 +83,58 @@ def performance_analysis():
 
 @app.route('/insertion-time')
 def measure_insertion_time():
-    sizes, bplus_times, brute_times = measure_insertion_performance("students","performance")
+    rows = request.args.get('rows', type=int)
+    if not rows:
+        return "Number of rows not specified!", 400
+
+    sizes, bplus_times, brute_times = measure_insertion_performance("students","performance",rows)
     plot_performance(sizes, bplus_times, brute_times, "Insertion", "students")
 
     # Image URL path (for HTML)
-    image_url = url_for('static', filename='performance_plots/insertion_performance.png')
-    return render_template('insertion_performance.html', image_url = image_url)
+    filename = 'performance_plots/students_insertion_times.png'
+    image_url = url_for('static', filename=filename)
+    return render_template('insertion_performance.html', image_url=image_url)
+
 
 @app.route('/deletion-time')
 def measure_deletion_time():
-    sizes, bplus_times, brute_times = measure_deletion_performance("students","performance")
+    rows = request.args.get('rows', type=int)
+    if not rows:
+        return "Number of rows not specified!", 400
+    sizes, bplus_times, brute_times = measure_deletion_performance("students","performance",rows)
     plot_performance(sizes, bplus_times, brute_times, "Deletion", "students")
 
     # Image URL path (for HTML)
-    image_url = url_for('static', filename='performance_plots/deletion_performance.png')
+
+    filename = 'performance_plots/students_deletion_times.png'
+    image_url = url_for('static', filename=filename)
     return render_template('deletion_performance.html', image_url = image_url)
 
 @app.route('/searching-time')
 def measure_searchingn_time():
-    sizes, bplus_times, brute_times = measure_search_performance("students","performance")
+    rows = request.args.get('rows', type=int)
+    if not rows:
+        return "Number of rows not specified!", 400
+
+    sizes, bplus_times, brute_times = measure_search_performance("students","performance",rows)
     plot_performance(sizes, bplus_times, brute_times, "Search", "students")
 
-    # Image URL path (for HTML)
-    image_url = url_for('static', filename='performance_plots/Searching_performance.png')
+    filename = 'performance_plots/students_search_times.png'
+    image_url = url_for('static', filename=filename)
     return render_template('searching_performance.html', image_url = image_url)
 
 @app.route('/rangequery-time')
 def measure_rangequery_time():
-    sizes, bplus_times, brute_times = measure_range_query_performance("students","performance")
+    rows = request.args.get('rows', type=int)
+    if not rows:
+        return "Number of rows not specified!", 400    
+
+    sizes, bplus_times, brute_times = measure_range_query_performance("students","performance",rows)
     plot_performance(sizes, bplus_times, brute_times, "range-query", "students")
 
     # Image URL path (for HTML)
-    image_url = url_for('static', filename='performance_plots/rangequery_performance.png')
+    filename = 'performance_plots/students_range-query_times.png'
+    image_url = url_for('static', filename=filename)
     return render_template('rangequery_performance.html', image_url = image_url)
 
 
@@ -125,7 +145,7 @@ def create_table():
         columns = request.form.getlist('columns[]')
         primary_key = request.form.get('primary_key')
 
-        db_name = session['selected_db_name']
+        db_name = session.get('selected_db_name')
         if db_name:
             db_path = os.path.join(DATABASE_FOLDER, db_name)
             loaded_db = Database.load_database(db_path)
@@ -151,7 +171,7 @@ def delete_table():
     if not table_name:
         flash("Table name is required.", 'error')
 
-    db_name = session['selected_db_name']
+    db_name = session.get('selected_db_name')
     if db_name:
         db_path = os.path.join(DATABASE_FOLDER, db_name)
         loaded_db = Database.load_database(db_path)
@@ -184,7 +204,7 @@ def table_dashboard():
 def insert_record():
     if request.method == 'POST':
         table_name = session.get('selected_table')
-        db_name = session['selected_db_name']
+        db_name = session.get('selected_db_name')
 
         if table_name and db_name:
             if db_name:
@@ -206,7 +226,7 @@ def insert_record():
         loaded_db.save_database(db_path)
         return redirect(url_for('table_dashboard'))
 
-    db_name = session['selected_db_name']
+    db_name = session.get('selected_db_name')
     table_name = session.get('selected_table')
     if db_name:
         db_path = os.path.join(DATABASE_FOLDER, db_name)
@@ -219,7 +239,7 @@ def insert_record():
 def update_record():
     if request.method == 'POST':
         table_name = session.get('selected_table')
-        db_name = session['selected_db_name']
+        db_name = session.get('selected_db_name')
 
         if table_name and db_name:
             db_path = os.path.join(DATABASE_FOLDER, db_name)
@@ -240,7 +260,7 @@ def update_record():
             loaded_db.save_database(db_path)
             return redirect(url_for('table_dashboard'))
 
-    db_name = session['selected_db_name']
+    db_name = session.get('selected_db_name')
     table_name = session.get('selected_table')
     if db_name:
         db_path = os.path.join(DATABASE_FOLDER, db_name)
@@ -249,50 +269,137 @@ def update_record():
     columns = loaded_db.tables[table_name].columns
     return render_template('update_record.html', table_name= table_name ,table_columns = columns)
 
-@app.route('/search-record', methods = ['POST','GET'])
+@app.route('/search-record', methods=['POST', 'GET'])
 def search_record():
     if request.method == 'POST':
         table_name = session.get('selected_table')
-        db_name = session['selected_db_name']
+        db_name = session.get('selected_db_name')
 
         if table_name and db_name:
             db_path = os.path.join(DATABASE_FOLDER, db_name)
             loaded_db = Database.load_database(db_path)
         else:
-            flash("Table name and database is required.", 'error')
+            flash("Table name and database are required.", 'error')
             return redirect(url_for('dashboard'))
 
         columns = loaded_db.tables[table_name].columns
-
         key = request.form.get('student_id')
-
-        loaded_db.search(table_name,key)
-        loaded_db.save_database(db_path)
-        return redirect(url_for('table_dashboard'))
-
-    db_name = session['selected_db_name']
+        
+        # Search for the record
+        results = loaded_db.search(table_name, key)  # Assuming 'search' returns matching records
+        return render_template('search_record.html', table_name=table_name, table_columns=columns, results=results)
+    
+    db_name = session.get('selected_db_name')
     table_name = session.get('selected_table')
     if db_name:
         db_path = os.path.join(DATABASE_FOLDER, db_name)
         loaded_db = Database.load_database(db_path)
 
     columns = loaded_db.tables[table_name].columns
-    return render_template('search_record.html', table_name= table_name ,table_columns = columns)
-
+    return render_template('search_record.html', table_name=table_name, table_columns=columns)
 
 @app.route('/display-all-record')
 def display_all_records():
     table_name = session.get('selected_table')
-    db_name = session['selected_db_name']
+    db_name = session.get('selected_db_name')
+
     if db_name:
         db_path = os.path.join(DATABASE_FOLDER, db_name)
         loaded_db = Database.load_database(db_path)
 
-    records = loaded_db.print_records(table_name)
-    columns = loaded_db.tables[table_name].columns
-    return render_template('display_all_record.html', table_name=table_name, records=records, table_columns = columns)
+        # Get records and column names
+        records_dict = loaded_db.print_records(table_name)
+        columns = loaded_db.tables[table_name].columns
+
+        # Convert dict-of-dicts → list-of-dicts for Jinja rendering
+        record_list = list(records_dict.values())
+
+        return render_template(
+            'display_all_record.html',
+            table_name=table_name,
+            records=record_list,
+            table_columns=columns
+        )
+    else:
+        return "No database selected", 400
 
 
+
+@app.route('/delete-record', methods=['POST', 'GET'])
+def delete_record():
+    if request.method == 'POST':
+        table_name = session.get('selected_table')
+        db_name = session.get('selected_db_name')
+
+        if table_name and db_name:
+            db_path = os.path.join(DATABASE_FOLDER, db_name)
+            loaded_db = Database.load_database(db_path)
+        else:
+            flash("Table name and database are required.", 'error')
+            return redirect(url_for('dashboard'))
+
+        key = request.form.get('student_id')
+
+        if not key:
+            flash("Primary key value is required to delete a record.", 'error')
+            return redirect(url_for('delete_record'))
+
+        loaded_db.delete(table_name, key)
+        loaded_db.save_database(db_path)
+        flash("Record deleted successfully!", 'success')
+        return redirect(url_for('table_dashboard'))
+
+    # For GET: show the form
+    db_name = session.get('selected_db_name')
+    table_name = session.get('selected_table')
+
+    if db_name and table_name:
+        db_path = os.path.join(DATABASE_FOLDER, db_name)
+        loaded_db = Database.load_database(db_path)
+        table_columns = loaded_db.tables[table_name].columns
+        return render_template('delete_record.html', table_name=table_name, columns=table_columns)
+
+    flash("Table and database must be selected.", 'error')
+    return redirect(url_for('dashboard'))
+
+@app.route('/range-query', methods=['POST', 'GET'])
+def range_query():
+    if request.method == 'POST':
+        table_name = session.get('selected_table')
+        db_name = session.get('selected_db_name')
+
+        if table_name and db_name:
+            db_path = os.path.join(DATABASE_FOLDER, db_name)
+            loaded_db = Database.load_database(db_path)
+        else:
+            flash("Table name and database are required.", 'error')
+            return redirect(url_for('dashboard'))
+
+        Min_value= request.form.get('min_value')
+        Max_value= request.form.get('max_value')
+
+        if not Min_value or not Max_value:
+            flash(" Values are required to range query.", 'error')
+            return redirect(url_for('range_query'))
+
+        results = loaded_db.range_query(table_name,Min_value, Max_value)
+        columns = loaded_db.tables[table_name].columns
+        
+        flash("Records returned successfully!", 'success')
+        return render_template('range_query_results.html', results=results, columns=columns)
+
+    # For GET: show the form
+    db_name = session.get('selected_db_name')
+    table_name = session.get('selected_table')
+
+    if db_name and table_name:
+        db_path = os.path.join(DATABASE_FOLDER, db_name)
+        loaded_db = Database.load_database(db_path)
+        table_columns = loaded_db.tables[table_name].columns
+        return render_template('range_query.html', table_name=table_name, columns=table_columns)
+
+    flash("Table and database must be selected.", 'error')
+    return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':

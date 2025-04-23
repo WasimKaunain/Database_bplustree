@@ -11,7 +11,6 @@ class BPlusTree:
     def __init__(self, t=3):
         self.root = BPlusTreeNode(leaf=True)
         self.t = t
-
     def search(self, key, node=None):
         node = node or self.root
         if node.leaf:
@@ -53,7 +52,6 @@ class BPlusTree:
         t = self.t
         node = parent.children[index]
         mid = t // 2
-
         new_node = BPlusTreeNode(leaf=node.leaf)
         if node.leaf:
             new_node.keys = node.keys[mid:]
@@ -78,56 +76,57 @@ class BPlusTree:
 
     def _delete(self, node, key):
         if node.leaf:
-            # Delete from leaf node
             for i, (k, v) in enumerate(node.keys):
                 if k == key:
                     node.keys.pop(i)
                     return
         else:
-            # Internal node: find correct child
             idx = 0
             while idx < len(node.keys) and key > node.keys[idx]:
                 idx += 1
+
+            if idx >= len(node.children):  # guard clause
+                print(f"[ERROR] Invalid child index: {idx} for node with {len(node.children)} children")
+                return
+
             self._delete(node.children[idx], key)
 
-            # After delete, check if child underflows
-            if len(node.children[idx].keys) < (self.t - 1) // 2:
+            if idx < len(node.children) and len(node.children[idx].keys) < (self.t - 1) // 2:
                 self._fix_underflow(node, idx)
 
     def _fix_underflow(self, parent, idx):
         t = self.t
         child = parent.children[idx]
 
-        # Try borrowing from left sibling
+        # Left sibling borrow
         if idx > 0 and len(parent.children[idx - 1].keys) > (t - 1) // 2:
             left_sibling = parent.children[idx - 1]
             if child.leaf:
-                # Borrow last key from left sibling
                 borrowed_key = left_sibling.keys.pop(-1)
                 child.keys.insert(0, borrowed_key)
                 parent.keys[idx - 1] = child.keys[0][0]
             else:
-                # Borrow from left sibling for internal node
                 child.keys.insert(0, parent.keys[idx - 1])
                 parent.keys[idx - 1] = left_sibling.keys.pop(-1)
                 child.children.insert(0, left_sibling.children.pop(-1))
 
-        # Try borrowing from right sibling
+        # Right sibling borrow
         elif idx < len(parent.children) - 1 and len(parent.children[idx + 1].keys) > (t - 1) // 2:
             right_sibling = parent.children[idx + 1]
             if child.leaf:
                 borrowed_key = right_sibling.keys.pop(0)
                 child.keys.append(borrowed_key)
-                parent.keys[idx] = right_sibling.keys[0][0]
+                if right_sibling.keys:
+                    parent.keys[idx] = right_sibling.keys[0][0]
             else:
                 child.keys.append(parent.keys[idx])
-                parent.keys[idx] = right_sibling.keys.pop(0)
+                if right_sibling.keys:
+                    parent.keys[idx] = right_sibling.keys.pop(0)
                 child.children.append(right_sibling.children.pop(0))
 
-        # Otherwise, merge with a sibling
+        # Merge cases
         else:
             if idx > 0:
-                # Merge with left sibling
                 left_sibling = parent.children[idx - 1]
                 if child.leaf:
                     left_sibling.keys.extend(child.keys)
@@ -138,8 +137,7 @@ class BPlusTree:
                     left_sibling.children.extend(child.children)
                 parent.keys.pop(idx - 1)
                 parent.children.pop(idx)
-            else:
-                # Merge with right sibling
+            elif idx + 1 < len(parent.children):  # merge with right sibling safely
                 right_sibling = parent.children[idx + 1]
                 if child.leaf:
                     child.keys.extend(right_sibling.keys)
@@ -153,14 +151,27 @@ class BPlusTree:
 
     def range_query(self, start_key, end_key):
         result = []
-        node = self.root
+        node=self.root
         while not node.leaf:
-            node = node.children[0]
+            child_found=0
+            for i, item in enumerate(node.keys):
+                if start_key < item:
+                     node=node.children[i]
+                     child_found=1
+                     break
+            if child_found==0:
+                node=node.children[-1]
         while node:
+            breaker=0
             for k, v in node.keys:
                 if start_key <= k <= end_key:
                     result.append((k, v))
+                if(k>=end_key):
+                    breaker=1
+                    break
             node = node.next
+            if(breaker==1):
+                break
         return result
 
     def visualize(self, filename='bplustree'):
@@ -173,6 +184,7 @@ class BPlusTree:
         # Render the graph to a file
         dot.render(filename, cleanup=True)
         print(f"B+ Tree visualization saved as {filename}.png")
+        return dot
 
     def _add_nodes(self, dot, node, parent_id=None):
         # Create a unique ID for the current node

@@ -1,12 +1,14 @@
 import os
 import time
 import random
+import matplotlib
+matplotlib.use('Agg')  # Use a backend that doesn't need a GUI
 import matplotlib.pyplot as plt
 from db_manager import Database
 from performance import PerformanceAnalyzer
 
-def generate_test_sizes():
-    return range(100, 10001, 1000)
+def generate_test_sizes(row):
+    return range(100, row, 1000)
 
 def generate_staff_department():
     departments = ['CSE', 'EE', 'CE', 'ME', 'ICDT', 'SPML', 'AI']
@@ -14,15 +16,16 @@ def generate_staff_department():
 
 def create_rows(table_name, num_rows):
     rows = []
+    id_pool = random.sample(range(1,100*num_rows+1), num_rows)
     if table_name == "students":
-        for i in range(1, num_rows + 1):
+        for i in id_pool:
             rows.append({
                 "id": i,
                 "name": f"Student_{i}",
                 "email": f"Student_{i}@example.com"
             })
     elif table_name == "staff":
-        for i in range(1, num_rows + 1):
+         for i in id_pool:
             rows.append({
                 "id": i,
                 "name": f"Staff_{i}",
@@ -30,8 +33,8 @@ def create_rows(table_name, num_rows):
             })
     return rows
 
-def measure_insertion_performance(table_name,db_name):
-    test_sizes = generate_test_sizes()
+def measure_insertion_performance(table_name,db_name,row):
+    test_sizes = generate_test_sizes(row)
     bplus_times = []
     brute_times = []
 
@@ -53,8 +56,8 @@ def measure_insertion_performance(table_name,db_name):
 
     return test_sizes, bplus_times, brute_times
 
-def measure_search_performance(table_name,db_name):
-    test_sizes = generate_test_sizes()
+def measure_search_performance(table_name,db_name,row):
+    test_sizes = generate_test_sizes(row)
     bplus_times = []
     brute_times = []
 
@@ -79,8 +82,8 @@ def measure_search_performance(table_name,db_name):
 
     return test_sizes, bplus_times, brute_times
 
-def measure_range_query_performance(table_name,db_name):
-    test_sizes = generate_test_sizes()
+def measure_range_query_performance(table_name,db_name,row):
+    test_sizes = generate_test_sizes(row)
     bplus_times = []
     brute_times = []
 
@@ -105,8 +108,8 @@ def measure_range_query_performance(table_name,db_name):
 
     return test_sizes, bplus_times, brute_times
 
-def measure_deletion_performance(table_name,db_name):
-    test_sizes = generate_test_sizes()
+def measure_deletion_performance(table_name,db_name,row):
+    test_sizes = generate_test_sizes(row)
     bplus_times = []
     brute_times = []
 
@@ -159,11 +162,11 @@ def plot_performance(sizes, bplus_times, brute_times, operation, table_name):
 if __name__ == "__main__":
     table_name = "students"  # or "staff"
 
-    # # Measure and plot insertion
-    sizes, bplus_times, brute_times = measure_insertion_performance("students")
-    plot_performance(sizes, bplus_times, brute_times, "Insertion", "students")
+    # # # Measure and plot insertion
+    # sizes, bplus_times, brute_times = measure_insertion_performance("students","performance")
+    # plot_performance(sizes, bplus_times, brute_times, "Insertion", "students")
 
-    # # Measure and plot search
+    # Measure and plot search
     # sizes, bplus_times, brute_times = measure_search_performance(table_name)
     # plot_performance(sizes, bplus_times, brute_times, "Search", table_name)
 

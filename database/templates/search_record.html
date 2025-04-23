@@ -6,78 +6,104 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f9fc;
       margin: 0;
+      padding: 2rem;
+      color: #333;
     }
 
     .card {
-      background-color: #e0f2fe;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-      width: 450px;
-      text-align: center;
+      background-color: #fff;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    h2 {
-      color: #1e3a8a;
-      margin-bottom: 30px;
+    h2, h3 {
+      text-align: center;
+      color: #2c3e50;
     }
 
     form {
       display: flex;
-      flex-direction: column;
-      gap: 15px;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    input[type="text"] {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      width: 200px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e0e0e0;
       text-align: left;
     }
 
-    label {
-      color: #1e3a8a;
-      font-weight: 600;
-    }
-
-    input[type="text"], input[type="number"] {
-      padding: 10px;
-      border: 1px solid #93c5fd;
-      border-radius: 6px;
-      outline: none;
-      font-size: 16px;
-    }
-
-    button[type="submit"] {
-      background-color: #2563eb;
+    th {
+      background-color: #3498db;
       color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 20px;
     }
 
-    button[type="submit"]:hover {
-      background-color: #1d4ed8;
+    td {
+      background-color: #f9f9f9;
     }
 
     .back-button {
-      background-color: #ef4444;
-      color: white;
-      padding: 10px 20px;
-      font-weight: bold;
-      border-radius: 6px;
-      text-decoration: none;
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 2rem;
+      text-decoration: none;
+      color: #3498db;
+      font-weight: bold;
+      transition: color 0.3s;
     }
 
     .back-button:hover {
-      background-color: #dc2626;
+      color: #1f78b4;
+    }
+
+    @media screen and (max-width: 600px) {
+      form {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input, button {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -86,13 +112,42 @@
     <h2>Search {{ table_name.capitalize() }} Record</h2>
 
     <form method="POST" action="{{ url_for('search_record') }}">
-      <label for="id">ID</label>
-      <input type="text" id="student_id" name="student_id" required>
-
-      <button type="submit">Search</button>
+      <input type="text" id="student_id" name="student_id" placeholder="Enter ID to search..." required>
+      <button type="submit"><i class="fas fa-search"></i> Search</button>
     </form>
 
-    <a href="{{ url_for('table_dashboard') }}" class="back-button">← Back</a>
+    {% if results %}
+      <h3>Results for "{{ request.form.get('student_id')}}"</h3>
+      <table>
+        <thead>
+          <tr>
+            {% for column in table_columns %}
+              <th>{{ column }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              {% set values_list = results.values() | list %}
+              <td>{{ values_list[0] }}</td>  {# first value #}
+              <td>{{ values_list[1] }}</td>  {# second value #}
+              <td>{{values_list[2]  }}</td>
+
+              
+            </tr>
+        
+        </tbody>
+        
+
+
+      </table>
+    {% else %}
+      {% if request.method == 'POST' %}
+        <p style="text-align:center; margin-top:1rem; color: #e74c3c;">No records found.</p>
+      {% endif %}
+    {% endif %}
+
+    <a href="{{ url_for('table_dashboard') }}" class="back-button"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
   </div>
 </body>
 </html>

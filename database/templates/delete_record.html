@@ -64,8 +64,8 @@
       font-weight: bold;
       border-radius: 6px;
       text-decoration: none;
-      margin-top: 30px;
       display: inline-block;
+      margin-top: 20px;
     }
 
     .back-button:hover {
@@ -74,28 +74,20 @@
   </style>
 </head>
 <body>
+  <div class="card">
+    <h2>Delete {{ table_name.capitalize() }} Record</h2>
 
-  <h2>Delete Record from {{ table_name.capitalize() }}</h2>
+    <form method="POST" action="{{ url_for('delete_record') }}">
+      <label for="id">ID</label>
+      <input type="text" id="student_id" name="student_id" required>
 
-  <form method="POST" action="/delete-record">
-    <input type="hidden" name="table_name" value="{{ table_name }}">
-
-    <label for="column_name">Select Column</label>
-    <select name="column_name" id="column_name" required>
-      {% for column in table_columns %}
-        <option value="{{ column }}">{{ column }}</option>
-      {% endfor %}
-    </select>
-
-    <label for="value">Value to Match</label>
-    <input type="text" name="value" id="value" placeholder="Enter value to delete record" required>
-
-    <br>
-    <button type="submit"><i class="fas fa-trash-alt"></i> Delete</button>
-  </form>
-
-  <br>
-  <a href="{{ url_for('table_dashboard', table_name=table_name) }}" class="back-button">← Back</a>
-
+      <button type="submit">Delete</button>
+      
+      <!-- Move the back button *inside* the form here -->
+      <div style="margin-top: 15px;">
+        <a href="{{ url_for('table_dashboard') }}" class="back-button">← Back</a>
+      </div>
+    </form>
+  </div>
 </body>
 </html>

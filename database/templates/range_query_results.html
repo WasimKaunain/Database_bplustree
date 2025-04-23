@@ -1,0 +1,102 @@
+<!-- templates/range_query_results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Range Query Results</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background-color: #e0f2fe;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 900px;
+    }
+
+    h2 {
+      color: #1e3a8a;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #93c5fd;
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #bfdbfe;
+    }
+
+    .close-button {
+      float: right;
+      background-color: #f87171;
+      font-weight: bold;
+      padding: 10px;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .close-button:hover {
+      background-color: #ef4444;
+    }
+  </style>
+  <script>
+    function goBackToForm() {
+      window.history.back();
+    }
+  </script>
+</head>
+<body>
+  <div class="card">
+    <button class="close-button" onclick="goBackToForm()">
+      <i class="fas fa-times"></i> Close
+    </button>
+    <h2>Results for Range</h2>
+    <div class="results">
+      <table>
+        <thead>
+          <tr>
+            {% for col in columns %}
+              <th>{{ col }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+              {% for item in row %}
+                {% if item.id or item.name or item.email %}
+                <tr>
+                  <td>{{ item.id or '-' }}</td>
+                  <td>{{ item.name or '-' }}</td>
+                  <td>{{ item.email or '-' }}</td>
+                </tr>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </tbody>          
+      </table>
+    </div>
+  </div>
+</body>
+</html>
