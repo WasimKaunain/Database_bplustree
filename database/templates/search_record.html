@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Record - {{ table_name.capitalize() }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background-color: #e0f2fe;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #1e3a8a;
+      margin-bottom: 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      text-align: left;
+    }
+
+    label {
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"] {
+      padding: 10px;
+      border: 1px solid #93c5fd;
+      border-radius: 6px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button[type="submit"] {
+      background-color: #2563eb;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    .back-button {
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Search {{ table_name.capitalize() }} Record</h2>
+
+    <form method="POST" action="{{ url_for('search_record') }}">
+      <label for="id">ID</label>
+      <input type="text" id="student_id" name="student_id" required>
+
+      <button type="submit">Search</button>
+    </form>
+
+    <a href="{{ url_for('table_dashboard') }}" class="back-button">← Back</a>
+  </div>
+</body>
+</html>

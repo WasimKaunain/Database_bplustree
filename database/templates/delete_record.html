@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete Record - {{ table_name.capitalize() }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      padding: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #1e3a8a;
+      margin-bottom: 30px;
+    }
+
+    form {
+    background-color: #e0f2fe;
+    padding: 40px 60px;
+    border-radius: 10px;
+    display: inline-block;
+    min-width: 400px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 500;
+      color: #1e3a8a;
+    }
+
+    input[type="text"], select {
+      padding: 10px;
+      width: 400px;
+      border: 1px solid #93c5fd;
+      border-radius: 6px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #dc2626;
+    }
+
+    .back-button {
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top: 30px;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Delete Record from {{ table_name.capitalize() }}</h2>
+
+  <form method="POST" action="/delete-record">
+    <input type="hidden" name="table_name" value="{{ table_name }}">
+
+    <label for="column_name">Select Column</label>
+    <select name="column_name" id="column_name" required>
+      {% for column in table_columns %}
+        <option value="{{ column }}">{{ column }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="value">Value to Match</label>
+    <input type="text" name="value" id="value" placeholder="Enter value to delete record" required>
+
+    <br>
+    <button type="submit"><i class="fas fa-trash-alt"></i> Delete</button>
+  </form>
+
+  <br>
+  <a href="{{ url_for('table_dashboard', table_name=table_name) }}" class="back-button">← Back</a>
+
+</body>
+</html>

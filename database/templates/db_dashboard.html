@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Database Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f2fe, #dbeafe);
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 25%;
+      background-color: #1e3a8a;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .table-list {
+      list-style: none;
+      padding-left: 0;
+      flex-grow: 1;
+    }
+
+    .table-list li {
+      background-color: #3b82f6;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .table-list li:hover {
+      background-color: #2563eb;
+    }
+
+    .performance-check {
+      margin-top: auto;
+    }
+
+    .performance-check button {
+      width: 100%;
+      background-color: #10b981;
+      color: white;
+      padding: 30px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .performance-check button:hover {
+      background-color: #059669;
+    }
+
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .section {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 25px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .section h3 {
+      margin-bottom: 20px;
+      color: #1e3a8a;
+    }
+
+    select {
+      width: 60%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 8px;
+    }
+
+    button {
+      background-color: #3b82f6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .create-table-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .create-table-btn:hover {
+      background-color: #45a049;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    .delete-btn {
+      background-color: #ef4444;
+    }
+
+    .delete-btn:hover {
+      background-color: #dc2626;
+    }
+
+    .performance-check {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.performance-button {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.performance-button:hover {
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  box-shadow: 0 12px 24px rgba(0, 114, 255, 0.6);
+  transform: translateY(-4px);
+}
+
+    .back-button {
+      margin-top: 10px;
+      display: inline-block;
+      text-decoration: none;
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Sidebar: List of Tables -->
+    <div class="sidebar">
+      <h2>Tables in {{ db_name }}</h2>
+      <ul class="table-list">
+        {% for table in tables %}
+          <li>{{ table }}</li>
+        {% endfor %}
+      </ul>
+
+      <!-- Performance Check Button -->
+      <div class="performance-check">
+        <button onclick="window.location.href='/performance-analysis'" class="performance-button">
+          <i class="fas fa-gauge-high"></i> Performance Check
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Section: Create/Delete/Choose -->
+    <div class="main">
+
+      <!-- Create Table -->
+      <div class="section">
+        <h3>Create New Table</h3>
+        <button class="create-table-btn" onclick="window.location.href='/create-table'">
+          <i class="fas fa-plus-circle"></i> Create Table
+        </button>
+      </div>
+
+      <!-- Delete Table -->
+      <div class="section">
+        <h3>Delete Table</h3>
+        <form method="POST" action="/delete-table">
+          <input type="hidden" name="db_name" value="{{ db_name }}">
+          <select name="table_name">
+            {% for table in tables %}
+              <option value="{{ table }}">{{ table }}</option>
+            {% endfor %}
+          </select><br>
+          <button type="submit" class="delete-btn"><i class="fas fa-trash"></i> Delete Table</button>
+        </form>
+      </div>
+
+      <!-- Select Table -->
+      <div class="section">
+        <i class="fas fa-search"></i>
+        <h3>Choose Table</h3>
+        <form method="POST" action="/choose-table">
+          <input type="hidden" name="db_name" value="{{ db_name }}">
+          <select name="table_name" required>
+            {% for table in tables %}
+              <option value="{{ table }}">{{ table }}</option>
+            {% endfor %}
+          </select>
+          <br>
+          <button type="submit">Select Table</button>
+        </form>
+      </div>
+
+      <!-- Back Button -->
+      <a href="{{ url_for('existing_databases') }}" class="back-button">← Back</a>
+
+    </div>
+  </div>
+</body>
+</html>

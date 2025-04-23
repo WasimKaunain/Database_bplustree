@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Insertion Time Performance</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e1f5fe);
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #1e3a8a;
+      margin-bottom: 30px;
+    }
+
+    .image-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+
+    .back-button {
+      margin-top: 40px;
+      display: inline-block;
+      text-decoration: none;
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Searching Time Performance</h1>
+
+  <div class="image-container">
+    {% if image_url %}
+      <img src="{{ image_url }}" alt="Insertion Time Chart">
+    {% else %}
+      <p style="color: gray;">Graph will appear here after performance analysis.</p>
+    {% endif %}
+  </div>
+
+  <a href="{{ url_for('performance_analysis') }}" class="back-button">← Back to Dashboard</a>
+
+</body>
+</html>

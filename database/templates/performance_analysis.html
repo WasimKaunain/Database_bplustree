@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Performance Analyzer Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #1e3a8a;
+      margin-bottom: 40px;
+    }
+
+    .function-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .function-card-form {
+      text-decoration: none;
+    }
+
+    .function-card {
+      background-color: #e0f2fe;
+      padding: 20px;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .function-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    }
+    .function-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .function-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .action-button {
+    background: linear-gradient(45deg, #4CAF50, #81C784);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .action-button:hover {
+    background: linear-gradient(45deg, #66BB6A, #A5D6A7);
+    transform: scale(1.05);
+  }
+
+    .function-card i {
+      font-size: 48px;
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+
+    .function-card h3 {
+      color: #1e3a8a;
+    }
+
+    .action-button {
+      display: none;
+    }
+
+    .back-button {
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top: 40px;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Performance Analyzer Dashboard</h1>
+
+  <div class="function-container">
+
+    <div class="function-card" onclick="window.location.href='/insertion-time';">
+      <i class="fas fa-clock"></i>
+      <h3>Measure Insertion Time</h3>
+      <button class="action-button">Measure Insert</button>
+    </div>
+    
+    <div class="function-card" onclick="window.location.href='/searching-time';">
+      <i class="fas fa-search"></i>
+      <h3>Measure Search Time</h3>
+      <button class="action-button">Measure Search</button>
+    </div>
+    
+    <div class="function-card" onclick="window.location.href='/deletion-time';">
+      <i class="fas fa-trash-alt"></i>
+      <h3>Measure Deletion Time</h3>
+      <button class="action-button">Measure Delete</button>
+    </div>
+    
+    <div class="function-card" onclick="window.location.href='/rangequery-time';">
+      <i class="fas fa-random"></i>
+      <h3>Measure Range Query</h3>
+      <button class="action-button">Measure Range</button>
+    </div>
+  </div>
+
+  <a href="{{ url_for('dashboard') }}" class="back-button">← Back</a>
+
+</body>
+</html>

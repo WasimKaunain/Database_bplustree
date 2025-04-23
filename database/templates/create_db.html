@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New Database</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      padding: 40px;
+      text-align: center;
+    }
+  
+    h1 {
+      color: #1e3a8a;
+    }
+  
+    form {
+      margin-top: 30px;
+    }
+  
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #60a5fa;
+      border-radius: 6px;
+      background-color: #eff6ff;
+      color: #1e3a8a;
+      font-weight: bold;
+    }
+  
+    button {
+      padding: 10px 20px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  
+    button:hover {
+      background-color: #2563eb;
+    }
+  
+    .back-button {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ef4444;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+  
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  
+    .flash-message {
+      padding: 10px;
+      margin: 15px auto;
+      width: 300px;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      animation: fadeOut 4s forwards;
+    }
+  
+    .flash-message.success {
+      background-color: #3b82f6;
+    }
+  
+    .flash-message.error {
+      background-color: #ef4444;
+    }
+  
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; display: none; }
+    }
+  </style>  
+</head>
+<body>
+
+  <h1>Create New Database</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div id="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% endwith %}
+
+
+  <form method="POST" action ="/create-database">
+    <input type="text" name="db_name" placeholder="Enter database name" required>
+    <button type="submit">Create</button>
+  </form>
+
+  <a href="{{ url_for('home') }}" class="back-button">← Back</a>
+
+</body>
+</html>
