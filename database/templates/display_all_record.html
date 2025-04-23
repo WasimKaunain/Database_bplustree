@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Display All Records - {{ table_name.capitalize() }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      padding: 40px;
+    }
+
+    h2 {
+      color: #1e3a8a;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #e0f2fe;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #93c5fd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #bfdbfe;
+    }
+
+    .back-button {
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+
+    .table-container {
+      max-height: 500px;
+      overflow-y: auto;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>All Records in {{ table_name.capitalize() }}</h2>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          {% for col in table_columns %}
+            <th>{{ col.replace('_', ' ').capitalize() }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in records %}
+          <tr>
+            {% for col in table_columns %}
+              <td>{{ row[col] }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <a href="{{ url_for('table_dashboard') }}" class="back-button">← Back</a>
+
+</body>
+</html>

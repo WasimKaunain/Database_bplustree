@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ table_name.capitalize() }} Table Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #1e3a8a;
+      margin-bottom: 40px;
+    }
+
+    .function-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .function-card-form {
+      text-decoration: none;
+    }
+
+    .function-card {
+      background-color: #e0f2fe;
+      padding: 20px;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .function-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .function-card i {
+      font-size: 48px;
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+
+    .button-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.function-card {
+  background: linear-gradient(145deg, #d1d5db, #f3f4f6);
+  padding: 30px;
+  border-radius: 15px;
+  width: 180px;
+  height: 180px;
+  box-shadow: 8px 8px 20px #cbd5e1, -8px -8px 20px #ffffff;
+  text-align: center;
+  text-decoration: none;
+  color: #1e3a8a;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.function-card i {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.function-card h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.function-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 12px 12px 25px #cbd5e1, -12px -12px 25px #ffffff;
+  background: linear-gradient(145deg, #e0e7ff, #f3f4f6);
+}
+
+    .function-card h3 {
+      color: #1e3a8a;
+    }
+
+    .action-button {
+      display: none;
+    }
+
+    .create-table { background-color: #3b82f6; color: white; }
+    .insert-record { background-color: #10b981; color: white; }
+    .update-record { background-color: #f59e0b; color: white; }
+    .search-record { background-color: #2563eb; color: white; }
+    .print-records { background-color: #4b5563; color: white; }
+    .delete-record { background-color: #ef4444; color: white; }
+    .range-query { background-color: #8b5cf6; color: white; }
+
+    .back-button {
+      background-color: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top: 40px;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ table_name.capitalize() }} Table</h1>
+
+  <div class="function-container">
+
+    <div class="button-grid">
+      <a href="/insert-record" class="function-card">
+        <i class="fas fa-plus-circle"></i>
+        <h3>Insert Record</h3>
+      </a>
+    
+      <a href="/update-record" class="function-card">
+        <i class="fas fa-edit"></i>
+        <h3>Update Record</h3>
+      </a>
+    
+      <a href="/search-record" class="function-card">
+        <i class="fas fa-search"></i>
+        <h3>Search Record</h3>
+      </a>
+    
+      <a href="/display-all-record" class="function-card">
+        <i class="fas fa-print"></i>
+        <h3>Display All Records</h3>
+      </a>
+    
+      <a href="/delete-record" class="function-card">
+        <i class="fas fa-trash-alt"></i>
+        <h3>Delete Record</h3>
+      </a>
+    
+      <a href="/range-query" class="function-card">
+        <i class="fas fa-random"></i>
+        <h3>Range Query</h3>
+      </a>
+    </div>
+
+  </div>
+
+  <a href="{{ url_for('home') }}" class="back-button">← Back</a>
+
+</body>
+</html>
