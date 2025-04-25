@@ -41,12 +41,12 @@ We will choose here students table as we had populated this table for testing.
 
 
 ### 5. Create New Table Form
-![Create New Table]  
+![Create New Table](Screenshots/Create_new_table_form.png)
 Create Table form page
 
 
 ### 6. Table Dashboard with diffrent Functionalities
-![Table dashboard]  
+![Table dashboard](Screenshots/table_dashboard.png)
 This is a table dashboard page where various functionalities are given
 
 
