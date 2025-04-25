@@ -13,7 +13,7 @@ Welcome to the **CheckInOut** Database Management System! This project provides 
 
 - # 📸 Screenshot Documentation — CheckInOut System
 
-This document showcases key screenshots from the **CheckInOut System** web application and database performance dashboard. Each section includes visual references along with placeholders for brief descriptions. Feel free to elaborate based on functionality and context.
+This document showcases key screenshots from the **CheckInOut System** web application and database performance dashboard. Each section includes visual references along with  brief descriptions.
 
 ---
 
