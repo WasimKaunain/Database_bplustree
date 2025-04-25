@@ -24,7 +24,7 @@ This document showcases key screenshots from the **CheckInOut System** web appli
 Homepage where we have two options : Use an Existing database or create a new database
 
 ### 2. Existing Database List and Option to Choose Database  
-![Existing Databases](Screenshots/Existing _database_list_and_option_to_choose_database.png)  
+![Existing Databases](Screenshots/Existing_database_list_and_option_to_choose_database.png)  
 Here we have already two databases named Checkinout and Testing. We will use Checkinout database
 
 ### 3. Add New Database  
