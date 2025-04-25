@@ -11,6 +11,46 @@ Welcome to the **CheckInOut** Database Management System! This project provides 
 - Dashboard interface to manage operations.
 - Performance comparison between naive list-based storage and a B+ Tree index.
 
+## 🚀 Beginner Tutorial to Run the App
+
+1. **Clone the Repository:**
+
+```bash
+https://https://github.com/WasimKaunain/Database_bplustree
+```
+
+2. **Install Dependencies:**
+
+```bash
+pip install -r requirements.txt
+```
+
+3. **Run the App:**
+
+```bash
+python app.py
+```
+
+4. **Access the Dashboard:**
+
+Open your browser and go to:
+
+```
+http://127.0.0.1:5000/
+```
+
+5. **Using the Dashboard:**
+   - Choose "Create Database" to create a new one.
+   - Choose "Use Existing Database" to select from pre-existing databases (like `checkinout`).
+   - Perform operations like insert, update, delete, search, range queries, and display all records easily.
+
+6. **Performance Testing:**
+   - Go to the **Performance Check** section.
+   - Compare search, insert, delete, and range query times between **Naive List** vs **B+ Tree** using graphs.
+
+---
+
+
 - # 📸 Screenshot Documentation — CheckInOut System
 
 This document showcases key screenshots from the **CheckInOut System** web application and database performance dashboard. Each section includes visual references along with  brief descriptions.
@@ -166,44 +206,6 @@ Module 4/
 
 ---
 
-## 🚀 Beginner Tutorial to Run the App
-
-1. **Clone the Repository:**
-
-```bash
-https://https://github.com/WasimKaunain/Database_bplustree
-```
-
-2. **Install Dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
-
-3. **Run the App:**
-
-```bash
-python app.py
-```
-
-4. **Access the Dashboard:**
-
-Open your browser and go to:
-
-```
-http://127.0.0.1:5000/
-```
-
-5. **Using the Dashboard:**
-   - Choose "Create Database" to create a new one.
-   - Choose "Use Existing Database" to select from pre-existing databases (like `checkinout`).
-   - Perform operations like insert, update, delete, search, range queries, and view records easily.
-
-6. **Performance Testing:**
-   - Go to the **Performance Analysis** section.
-   - Compare search, insert, delete, and range query times between **Naive List** vs **B+ Tree** using graphs.
-
----
 
 ## 📊 Technologies Used
 
