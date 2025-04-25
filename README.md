@@ -68,34 +68,34 @@ It will delete single record in that selected table
 ![Range Query](Screenshots/range_query_record.png)  
 It will display all the records within that range of selected table
 
-###11. Search Record  
+### 11. Search Record  
 ![Search Record](Screenshots/search_record.png)  
 It will display the record being searched in that selected table
 
-### 11. Update Record  
+### 12. Update Record  
 ![update Record](Screenshots/update_record.png)  
 It will upfate the record in that selected table
 
 ## 📊 Performance Analysis
 
-### 12. Performance Check Dashboard  
+### 13. Performance Check Dashboard  
 ![Performance Dashboard](Screenshots/performance_check_dashboard.png)  
 Here we have multiple performance check options on B+ tree vs Brute Force method indexing.
 First, we have to select no. of rows on which we are doing performance check.
 
-### 13. Insertion Time Result Chart  
+### 14. Insertion Time Result Chart  
 ![Insertion Time Chart](Screenshots/measure_insertion_time_result_chart.png)  
 Show Performance Graph on doing insertion between B+ Tree and Brute Force method.
 
-### 14. Deletion Time Result Chart  
+### 15. Deletion Time Result Chart  
 ![Deletion Time Chart](Screenshots/measure_deletion_time_result_chart.png)  
 Show Performance Graph on doing deletion between B+ Tree and Brute Force method.
 
-### 15. Search Time Result Chart  
+### 16. Search Time Result Chart  
 ![Search Time Chart](Screenshots/measure_searching_time_result_chart.png)  
 Show Performance Graph on doing searching between B+ Tree and Brute Force method.
 
-### 16. Range Query Time Result Chart  
+### 17. Range Query Time Result Chart  
 ![Range Query Time Chart](Screenshots/measure_range_query_time_result_chart.png)  
 Show Performance Graph on doing range query between B+ Tree and Brute Force method.
 
