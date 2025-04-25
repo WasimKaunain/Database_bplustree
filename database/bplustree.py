@@ -70,84 +70,93 @@ class BPlusTree:
 
     def delete(self, key):
         self._delete(self.root, key)
-        # If root becomes empty and not a leaf, move root down
+        # If root has become empty and has a child, demote it
         if not self.root.leaf and len(self.root.keys) == 0:
             self.root = self.root.children[0]
 
     def _delete(self, node, key):
         if node.leaf:
+            # Direct deletion from leaf
             for i, (k, v) in enumerate(node.keys):
                 if k == key:
                     node.keys.pop(i)
                     return
         else:
+            # Navigate to child that may contain the key
             idx = 0
             while idx < len(node.keys) and key > node.keys[idx]:
                 idx += 1
 
-            if idx >= len(node.children):  # guard clause
-                print(f"[ERROR] Invalid child index: {idx} for node with {len(node.children)} children")
-                return
+            if idx >= len(node.children):
+                return  # key not found
 
             self._delete(node.children[idx], key)
 
-            if idx < len(node.children) and len(node.children[idx].keys) < (self.t - 1) // 2:
+            # Fix underflow if it happened
+            if len(node.children[idx].keys) < (self.t - 1):
                 self._fix_underflow(node, idx)
+
+            # Update parent key if smallest key in child has changed
+            if not node.children[idx].leaf:
+                # Ensure there are keys to borrow from the right sibling
+                if idx < len(node.children) - 1 and len(node.children[idx + 1].keys) > 0:
+                    node.keys[idx] = node.children[idx + 1].keys[0][0]
+                elif idx > 0 and len(node.children[idx - 1].keys) > 0:
+                    node.keys[idx - 1] = node.children[idx].keys[0][0]
 
     def _fix_underflow(self, parent, idx):
         t = self.t
         child = parent.children[idx]
-
-        # Left sibling borrow
-        if idx > 0 and len(parent.children[idx - 1].keys) > (t - 1) // 2:
-            left_sibling = parent.children[idx - 1]
+    
+        # Try borrowing from left sibling
+        if idx > 0 and len(parent.children[idx - 1].keys) > t - 1:
+            left = parent.children[idx - 1]
             if child.leaf:
-                borrowed_key = left_sibling.keys.pop(-1)
-                child.keys.insert(0, borrowed_key)
+                borrowed = left.keys.pop(-1)
+                child.keys.insert(0, borrowed)
                 parent.keys[idx - 1] = child.keys[0][0]
             else:
                 child.keys.insert(0, parent.keys[idx - 1])
-                parent.keys[idx - 1] = left_sibling.keys.pop(-1)
-                child.children.insert(0, left_sibling.children.pop(-1))
-
-        # Right sibling borrow
-        elif idx < len(parent.children) - 1 and len(parent.children[idx + 1].keys) > (t - 1) // 2:
-            right_sibling = parent.children[idx + 1]
+                parent.keys[idx - 1] = left.keys.pop(-1)
+                child.children.insert(0, left.children.pop(-1))
+    
+        # Try borrowing from right sibling
+        elif idx < len(parent.children) - 1 and len(parent.children[idx + 1].keys) > t - 1:
+            right = parent.children[idx + 1]
             if child.leaf:
-                borrowed_key = right_sibling.keys.pop(0)
-                child.keys.append(borrowed_key)
-                if right_sibling.keys:
-                    parent.keys[idx] = right_sibling.keys[0][0]
+                borrowed = right.keys.pop(0)
+                child.keys.append(borrowed)
+                parent.keys[idx] = right.keys[0][0]
             else:
                 child.keys.append(parent.keys[idx])
-                if right_sibling.keys:
-                    parent.keys[idx] = right_sibling.keys.pop(0)
-                child.children.append(right_sibling.children.pop(0))
-
-        # Merge cases
+                parent.keys[idx] = right.keys.pop(0)
+                child.children.append(right.children.pop(0))
+    
+        # Merge with sibling
         else:
             if idx > 0:
-                left_sibling = parent.children[idx - 1]
+                left = parent.children[idx - 1]
                 if child.leaf:
-                    left_sibling.keys.extend(child.keys)
-                    left_sibling.next = child.next
+                    left.keys.extend(child.keys)
+                    left.next = child.next
                 else:
-                    left_sibling.keys.append(parent.keys[idx - 1])
-                    left_sibling.keys.extend(child.keys)
-                    left_sibling.children.extend(child.children)
+                    left.keys.append(parent.keys[idx - 1])
+                    left.keys.extend(child.keys)
+                    left.children.extend(child.children)
                 parent.keys.pop(idx - 1)
                 parent.children.pop(idx)
-            elif idx + 1 < len(parent.children):  # merge with right sibling safely
-                right_sibling = parent.children[idx + 1]
+            elif idx < len(parent.children) - 1:  # Ensure idx is within range
+                right = parent.children[idx + 1]
                 if child.leaf:
-                    child.keys.extend(right_sibling.keys)
-                    child.next = right_sibling.next
+                    child.keys.extend(right.keys)
+                    child.next = right.next
                 else:
                     child.keys.append(parent.keys[idx])
-                    child.keys.extend(right_sibling.keys)
-                    child.children.extend(right_sibling.children)
+                    child.keys.extend(right.keys)
+                    child.children.extend(right.children)
                 parent.keys.pop(idx)
                 parent.children.pop(idx + 1)
+
 
     def range_query(self, start_key, end_key):
         result = []
